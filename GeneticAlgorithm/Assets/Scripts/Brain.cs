@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Brain
 {
-    Vector2[] directions;
+    public Vector2[] directions;
 
     public Brain(int size)
     {
