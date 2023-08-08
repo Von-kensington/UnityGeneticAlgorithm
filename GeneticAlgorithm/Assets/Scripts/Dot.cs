@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class Dot : MonoBehaviour
 {
-    Brain brain;
+    public Brain brain;
     public float currentTime;
     Rigidbody2D rb;
     public int directionIndex;
-    public bool DEAD = false;
     // Start is called before the first frame update
     void Start()
     {
-        brain = new Brain(10);
         GetComponent<SpriteRenderer>().color = Random.ColorHSV();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -18,10 +16,11 @@ public class Dot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (brain == null) return;
         currentTime += Time.deltaTime;
         currentTime %= 10;
-        if (directionIndex >= brain.directions.Length - 1) DEAD = true;
-        if (DEAD)
+        if (directionIndex >= brain.directions.Length - 1) brain.SetDead();
+        if (brain.DEAD)
         {
             rb.velocity = Vector3.zero;
             return;
