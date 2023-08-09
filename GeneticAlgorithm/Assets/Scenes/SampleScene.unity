@@ -168,10 +168,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0cbd16047c14b4887e68e328cf8923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popBrainSize: 5
-  dotPrefab: {fileID: 3835133264683251590, guid: 38853c66d659b5349adf68bcad6afc74, type: 3}
-  target: {fileID: 1173658500}
-  popSize: 200
+  agentPrefab: {fileID: 3835133264683251590, guid: 38853c66d659b5349adf68bcad6afc74, type: 3}
+  target: {fileID: 10507790}
+  population: []
+  popSize: 10
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

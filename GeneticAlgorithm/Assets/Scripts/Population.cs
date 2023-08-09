@@ -1,56 +1,75 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-
 
 public class Population : MonoBehaviour
 {
-    Dot[] population;
-    public int popBrainSize;
-    public GameObject dotPrefab;
+    public GameObject agentPrefab;
     public Transform target;
+    public DNA[] population;
     public int popSize;
-    // Use this for initialization
-    void Start()
+    private void Start()
     {
-        ResetPopulation();
-    }
-
-    private void FixedUpdate()
-    {
-        if (population.Length == 0 || population == null) return;
-        int currentDeadAgents = 0;
-        int fittest = 0;
-        Dot fittestDot = null;
-        foreach (Dot dot in population)
+        population = new DNA[popSize];
+        for(int i = 0; i <population.Length; i++)
         {
-            currentDeadAgents += dot.brain.DEAD ? 1 : 0;
-            if(dot.brain.fitness > fittest)
-            {
-                fittest = dot.brain.fitness;
-                fittestDot = dot;
-            }
-        }
-        if(currentDeadAgents == popSize)
-        {
-            Debug.Log(fittestDot.brain.fitness);
-            ResetPopulation();
+            GameObject g = Instantiate(agentPrefab, transform.position, Quaternion.identity);
+            g.AddComponent<DNA>();
+            DNA gDNA = g.GetComponent<DNA>();
+            gDNA.target = target;
+            population[i] = gDNA;
         }
     }
 
-    void ResetPopulation()
+    private void Update()
     {
-        if(population != null)
+        if (!PopulationDead()) return;
+
+        Selection();
+
+        PopulateMatingPool();
+
+    }
+
+    bool PopulationDead()
+    {
+        int nDeadDna = 0;
+
+        for(int i = 0; i<population.Length; i++)
         {
-            foreach(Dot dot in population)
-            {
-                Destroy(dot.gameObject);
-            }
+            nDeadDna += population[i].dead ? 1 : 0;
         }
-        population = new Dot[popSize];
+
+        return nDeadDna == population.Length;
+    }
+
+    void Selection()
+    {
         for (int i = 0; i < population.Length; i++)
         {
-            population[i] = Instantiate(dotPrefab, transform.position, Quaternion.identity).GetComponent<Dot>();
-            population[i].brain = new Brain(popBrainSize, population[i].transform, target);
+            population[i].Evaluate();
+        }
+    }
+
+    void PopulateMatingPool()
+    {
+        List<DNA> matingPool = new();
+
+        for (int i = 0; i < population.Length; i++)
+        {
+            Destroy(population[i].gameObject);
+            int n = (int)(population[i].fitness * 100);
+            for(int j = 0; j < n; j++)
+            {
+                matingPool.Add(population[i]);
+            }
+            int a = new System.Random().Next(matingPool.Count-1);
+            int b = new System.Random().Next(matingPool.Count-1);
+            DNA partnerA = matingPool[a];
+            DNA partnerB = matingPool[b];
+            DNA child = partnerA.Crossover(partnerB, agentPrefab, transform);
+            population[i] = child;
+            //child.Mutate(0.01);
         }
     }
 }
