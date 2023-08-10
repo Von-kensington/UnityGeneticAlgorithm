@@ -31,6 +31,12 @@ public class Population : MonoBehaviour
         {
             if (count < population[i]?.genes.Length)
             {
+                if (population[i].dead)
+                {
+                    population[i].rb.velocity = Vector2.zero;
+                    continue;
+                }
+                population[i].steps = count;
                 population[i].rb.AddForce(population[i].genes[count], ForceMode2D.Impulse);
                 population[i].Evaluate();
             }

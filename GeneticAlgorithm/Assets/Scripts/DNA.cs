@@ -7,6 +7,7 @@ public class DNA
     public Transform target;
     public Rigidbody2D rb;
     public bool dead;
+    public int steps = 0;
     public float fitness;
     readonly int brainSize;
 
@@ -26,9 +27,10 @@ public class DNA
     {
         float dist = Vector2.Distance(rb.transform.position, target.position);
         fitness = 1 / dist;
-        if (dist < 4)
+        if (dist < 1)
         {
             fitness *= 10;
+            dead = true;
         }
     }
 
