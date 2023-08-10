@@ -1,58 +1,52 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class DNA : MonoBehaviour
+public class DNA
 {
     public Vector2[] genes;
-
     public Transform target;
-
+    public Rigidbody2D rb;
     public bool dead;
-
-    Rigidbody2D rb;
-
     public float fitness;
+    readonly int brainSize;
 
-    private void Awake()
+    public DNA(Transform target, Rigidbody2D rb, int brainSize)
     {
-        rb = GetComponent<Rigidbody2D>();
-        genes = new Vector2[5];
-        for (int i = 0; i < genes.Length; i++) genes[i] = Random.insideUnitCircle;
-        InvokeRepeating(nameof(UpdateVelocity), 0, 3);
+        this.target = target;
+        this.rb = rb;
+        this.brainSize = brainSize;
+        genes = new Vector2[brainSize];
+        for (int i = 0; i < genes.Length; i++)
+        {
+            genes[i] = Random.insideUnitCircle;
+        }
     }
 
     public void Evaluate()
     {
-        fitness = 1 - (Vector2.Distance(target.position, transform.position) / 10);
+        fitness = 1 / Vector2.Distance(rb.transform.position, target.position);
     }
 
-    int i = 0;
-    void UpdateVelocity()
+    public DNA Crossover(DNA a)
     {
-        if (i == genes.Length - 2) { dead = true; CancelInvoke(); }
-        i++;
-        rb.velocity = genes[i];
-    }
-
-    public DNA Crossover(DNA a, GameObject prefab, Transform spawn)
-    {
-        GameObject g = Instantiate(prefab, spawn.position, Quaternion.identity);
-        g.AddComponent<DNA>();
-        DNA child = g.GetComponent<DNA>();
-        child.target = target;
-
-
-        int midpoint = new System.Random().Next(genes.Length-1);
-        for(int i = 0; i < genes.Length-1; i++)
+        DNA child = new DNA(target, null, brainSize);
+        int midpoint = Random.Range(0, genes.Length);
+        for (int i = 0; i < genes.Length; i++)
         {
-            if(i>midpoint) child.genes[i] = a.genes[i];
-            else child.genes[i] = genes[i];
+            child.genes[i] = i < midpoint ? genes[i] : a.genes[i];
         }
+
         return child;
     }
 
     public void Mutate()
     {
-
+        for (int i = 0; i < genes.Length; i++)
+        {
+            if (Random.value < 0.01f)
+            {
+                genes[i] = Random.insideUnitCircle;
+            }
+        }
     }
 }

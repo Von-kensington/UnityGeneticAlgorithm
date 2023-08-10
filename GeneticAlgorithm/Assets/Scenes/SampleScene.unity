@@ -169,9 +169,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 3835133264683251590, guid: 38853c66d659b5349adf68bcad6afc74, type: 3}
-  target: {fileID: 10507790}
-  population: []
-  popSize: 10
+  target: {fileID: 0}
+  popSize: 0
+  lifeTime: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,7 +505,7 @@ Transform:
   m_GameObject: {fileID: 1173658497}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 9, z: 0}
+  m_LocalPosition: {x: 5.16, y: 0.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
