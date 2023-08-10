@@ -24,7 +24,12 @@ public class DNA
 
     public void Evaluate()
     {
-        fitness = 1 / Vector2.Distance(rb.transform.position, target.position);
+        float dist = Vector2.Distance(rb.transform.position, target.position);
+        fitness = 1 / dist;
+        if (dist < 4)
+        {
+            fitness *= 10;
+        }
     }
 
     public DNA Crossover(DNA a)
@@ -45,7 +50,7 @@ public class DNA
         {
             if (Random.value < 0.01f)
             {
-                genes[i] = Random.insideUnitCircle;
+                genes[i] = Random.insideUnitCircle * (Random.value);
             }
         }
     }

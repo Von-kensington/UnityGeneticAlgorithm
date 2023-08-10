@@ -31,7 +31,7 @@ public class Population : MonoBehaviour
         {
             if (count < population[i]?.genes.Length)
             {
-                population[i].rb.AddForce(population[i].genes[count].normalized*10);
+                population[i].rb.AddForce(population[i].genes[count], ForceMode2D.Impulse);
                 population[i].Evaluate();
             }
         }
